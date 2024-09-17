@@ -8,109 +8,43 @@
 
 using namespace std;
 
-int top_index = -1;
-int n;
-
-bool isEmpty() 
-{
-    // cout << "true" << endl;
-    return (top_index == -1);
-}
-
-bool isFull()
-{
-    // cout << "true" << endl;
-    return (top_index == n - 1);
-}
-
-int size()
-{
-    return top_index + 1;
-}
-
-void push(int stack[], int x)
-{
-    if (isFull())
-    {
-        cerr << "Overflow !!!" << endl;
-        return;
-    }
-    top_index++;
-    stack[top_index] = x;
-}
-
-void pop()
-{
-    if (isEmpty())
-    {
-        cerr << "Underflow !!!" << endl;
-        return;
-    }
-    top_index--;
-}
-
-int top(int stack[])
-{
-    if (isEmpty())
-    {
-        // cerr << "Underflow !!!";
-        return 0;
-    }
-
-    return stack[top_index];
-}
-
 int main()
 {
+    int n, jeitajabe = 1, flag = 0;
     cin >> n;
-    int* stack = (int*)malloc(n * sizeof(int));
-    string str;
-    while (getline(cin, str))
-    {
-        if (str == "/")
-            break;
-        char c;
-        int val;
-        stringstream ss(str);
+    vector<int> v(n);
+    stack<int> st, st2;
+    for (int i = 0;i < n;i++) cin >> v[i];
 
-        if (str.size() > 1) {
-            ss >> c >> val;
+    for (int i = 0;i < n;i++) {
+        cout << jeitajabe << endl;
+        while(!st.empty() && st.top() == jeitajabe) {
+            st.pop();
+            jeitajabe++;
+        }
+        if (v[i] != jeitajabe) {
+            st.push(v[i]);
         }
         else
-            ss >> c;
-
-        switch (c)
-        {
-        case '+':
-            push(stack, val);
-            cout << "Size : " << size() << endl
-                << "Stack elements : ";
-            for (int i = 0; i <= top_index; i++)
-                cout << stack[i] << ' ';
-            cout << endl
-                << "Top element : " << top(stack) << endl
-                << "isFull : ";
-            (isFull()) ? cout << "True" << endl : cout << "False" << endl;
-            cout << "isEmpty : ";
-            (isEmpty()) ? cout << "True" << endl : cout << "False" << endl;
-            break;
-        case '-':
-            pop();
-            cout << "Size : " << size() << endl
-                << "Stack elements : ";
-            for (int i = 0; i <= top_index; i++)
-                cout << stack[i] << ' ';
-            cout << endl
-                << "Top element : " << top(stack) << endl
-                << "isFull : ";
-            (isFull()) ? cout << "True" << endl : cout << "False" << endl;
-            cout << "isEmpty : ";
-            (isEmpty()) ? cout << "True" << endl : cout << "False" << endl;
-            break;
-        }
+            jeitajabe++;
     }
 
-    free(stack);
+    cout << jeitajabe << endl;
+
+    while (!st.empty()) {
+        cout << jeitajabe << endl;
+
+        if (st.top() != jeitajabe) {
+            flag = 1;
+            break;
+        }
+        st.pop();
+        jeitajabe++;
+    }
+
+    if (!flag) cout << "Yes" << endl;
+    else cout << "No" << endl;
+
 
     return 0;
 }

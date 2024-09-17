@@ -15,9 +15,9 @@ int main()
         if (s == "0")
             break;
         stringstream ss(s);
-        stack<int> st;
+        stack<pair<int, int>> st;
         vector<int> v;
-        int n, max_area = 0, width, height;
+        int n, max_area = 0, width, height, j;
         size_t sz;
 
         while (ss >> n)
@@ -29,28 +29,35 @@ int main()
             continue;
         }
 
-        st.push(v[0]);
+        st.push({ v[0],0 });
 
-
-        for (size_t i = 1;i < sz;i++) 
-            st.push(v[i]);
-        
-        width = 1;
-        height = st.top();
-        while (!st.empty()) {
-            height = min(st.top(), height);
-            if (height == 0) {
-                height = st.top();
-                width = 1;
+        for (size_t i = 1;i < sz;i++) {
+            j = i;
+            if (st.top().first > v[i]) {
+                while (!st.empty() && st.top().first > v[i]) {
+                    width = i - st.top().second;
+                    height = st.top().first;
+                    max_area = max(max_area, height * width);
+                    // cout << st.top().first << ' ' << width << ' ' << height << ' ' << max_area << ' ' << j << endl;
+                    j=st.top().second;
+                    st.pop();
+                }
             }
+            st.push({ v[i],j });
+        }
+
+        // cout << endl << "Second While loop" << endl;
+
+        while (!st.empty()) {
+            height = st.top().first;
+            width = sz - st.top().second;
             max_area = max(max_area, height * width);
-            // cout << st.top() << ' ' << width << ' ' << height << ' ' << max_area << endl;
+            // cout << st.top().first << ' ' << width << ' ' << height << ' ' << max_area << ' ' << st.top().second << endl;
             width++;
             st.pop();
         }
 
         cout << max_area << endl;
-        height = INT8_MAX;
         max_area = 0;
     }
 

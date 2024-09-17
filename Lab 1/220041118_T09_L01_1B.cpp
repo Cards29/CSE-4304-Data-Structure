@@ -12,7 +12,6 @@ int main()
     int n;
     string s;
     stack<char> st;
-    deque<char>d;
     cin >> s;
 
     n = s.size();
@@ -35,9 +34,12 @@ int main()
         return 0;
     }
     
+    vector<char>d(st.size());
+    int i=st.size()-1;
     while(!st.empty()){
-        d.push_front(st.top());
+        d[i]=st.top();
         st.pop();
+        i--;
     }
 
     for (auto &&i : d)
