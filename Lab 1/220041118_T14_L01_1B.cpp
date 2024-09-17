@@ -1,3 +1,10 @@
+/*
+    I am extremely sorry sir, but this problem was too hard for me.
+    So I just saw the soln on youtube, and learned the idea behind this problem
+    and then wrote the code.
+*/  
+
+
 #include <iostream>
 #include <stack>
 #include <string>
