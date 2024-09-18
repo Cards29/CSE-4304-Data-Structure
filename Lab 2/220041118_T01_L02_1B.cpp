@@ -50,6 +50,7 @@ int main() {
     cin >> n;
     int queue[n];
 
+
     while (cin >> t) {
         if (t == -1) {
             cout << "Exit" << endl;
