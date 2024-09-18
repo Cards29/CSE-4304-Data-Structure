@@ -28,7 +28,6 @@ int main()
     }
 
     cin >> n;
-
     a.pop_back();
 
     // for (auto &&i : a)
