@@ -60,7 +60,7 @@ void pop_back() {
         return;
     }
     back_index--;
-    if(back_index<0) back_index+=n;
+    if (back_index < 0) back_index += n;
     count_element--;
 }
 
@@ -76,15 +76,31 @@ int main() {
         }
         switch (t)
         {
-        case 2:
+        case 1://push_front
+            cin >> x;
+            if (count_element == n) {
+                cerr << "Overflow" << endl;
+                break;
+            }
+            push_front(queue, x);
+            // cout << front_index << endl;
+            // cout << back_index << endl;
+            // cout << "push_back: ";
+            szy = count_element;
+            for (int i = front_index;szy--;i = (i + 1) % n) {
+                cout << queue[i] << ' ';
+            }
+            cout << endl;
+            break;
+        case 2: // push_back
             cin >> x;
             if (count_element == n) {
                 cerr << "Overflow" << endl;
                 break;
             }
             push_back(queue, x);
-            cout << front_index << endl;
-            cout << back_index << endl;
+            // cout << front_index << endl;
+            // cout << back_index << endl;
             // cout << "push_back: ";
             szy = count_element;
             for (int i = front_index;szy--;i = (i + 1) % n) {
@@ -101,8 +117,8 @@ int main() {
                 break;
             }
             pop_front();
-            cout << front_index << endl;
-            cout << back_index << endl;
+            // cout << front_index << endl;
+            // cout << back_index << endl;
             // cout << "DeQueue: ";
             if (isEmpty()) {
                 cout << "queue is empty" << endl;
@@ -115,30 +131,15 @@ int main() {
             cout << endl;
             break;
 
-        case 1://push_front
-            cin >> x;
-            if (count_element == n) {
-                cerr << "Overflow" << endl;
-                break;
-            }
-            push_front(queue, x);
-            cout << front_index << endl;
-            cout << back_index << endl;
-            // cout << "push_back: ";
-            szy = count_element;
-            for (int i = front_index;szy--;i = (i + 1) % n) {
-                cout << queue[i] << ' ';
-            }
-            cout << endl;
-            break;
+
         case 4://pop_back
             if (count_element == 0) {
                 cerr << "Underflow" << endl;
                 break;
             }
             pop_back();
-            cout << front_index << endl;
-            cout << back_index << endl;
+            // cout << front_index << endl;
+            // cout << back_index << endl;
             // cout << "DeQueue: ";
             if (isEmpty()) {
                 cout << "deque is empty" << endl;
