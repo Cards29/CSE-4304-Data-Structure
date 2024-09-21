@@ -11,15 +11,12 @@ int n;
 int front_index = 0;
 int back_index = 0;
 int count_element;
-
 bool isEmpty() {
     return count_element == 0;
 }
-
 bool isFull() {
     return count_element == n;
 }
-
 int size() {
     return count_element;
 }
@@ -27,7 +24,6 @@ int size() {
 int front(int queue[]) {
     return queue[front_index];
 }
-
 void push_back(int queue[], int x) {
     if (count_element == n) {
         return;
