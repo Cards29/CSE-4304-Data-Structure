@@ -58,7 +58,10 @@
   "C_Cpp_Runner.msvcSecureNoWarnings": false,
   "files.associations": {
     "iostream": "cpp",
-    "ostream": "cpp"
+    "ostream": "cpp",
+    "array": "cpp",
+    "deque": "cpp",
+    "vector": "cpp"
   },
   "workbench.colorCustomizations": {
     "activityBar.activeBackground": "#2d3f52",
