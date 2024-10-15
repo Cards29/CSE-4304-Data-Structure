@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <string>
 #include <queue>
+#include <stack>
 
 using namespace std;
 
@@ -83,8 +84,6 @@ public:
         if (temp->data == key) {
 
         }
-        dfs_inorder(temp->left);
-        dfs_inorder(temp->right);
     }
     void dfs_inorder(node* temp) {
         if (temp == nullptr) return;
@@ -114,20 +113,25 @@ public:
         cout<<") ";
     }
     void bfs() {
+        int x=1;
         if (tree_root != nullptr) {
             queue<node*> q;
             q.push(tree_root);
             while (!q.empty()) {
-                int x=1;
-                node* current = q.front();
-                q.pop();
-                cout << current->data << '(';
-                if (current->parent == nullptr) cout << "null";
-                else cout << current->parent->data;
-                cout << ") "<<endl;
+                int l_size=q.size();
+                cout << "Level " << x << ": ";
+                while(l_size--){
+                    node* current = q.front();
+                    q.pop();
+                    cout << current->data << '(';
+                    if (current->parent == nullptr) cout << "null";
+                    else cout << current->parent->data;
+                    cout << ") ";
+                    if (current->left != nullptr) q.push(current->left);
+                    if (current->right != nullptr) q.push(current->right);
+                }
                 x++;
-                if (current->left != nullptr) q.push(current->left);
-                if (current->right != nullptr) q.push(current->right);
+                cout<<endl;
             }
         }
     }
@@ -164,14 +168,17 @@ int main() {
         case 1:
             cout << "Inorder:" << endl;
             bst.dfs_inorder(bst.get_root());
+            cout<<endl;
         break;
         case 2:
             cout << "Preorder:" << endl;
             bst.dfs_preorder(bst.get_root());
+            cout<<endl;
             break;
         case 3:
             cout << "Postorder:" << endl;
             bst.dfs_postorder(bst.get_root());
+            cout<<endl;
             break;
         case 4:
             bst.bfs();
