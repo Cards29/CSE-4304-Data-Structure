@@ -85,32 +85,71 @@ public:
 
         }
     }
-    void dfs_inorder(node* temp) {
-        if (temp == nullptr) return;
-        dfs_inorder(temp->left);
-        cout << temp->data << '(';
-        if (temp->parent == nullptr) cout << "null";
-        else cout << temp->parent->data;
-        cout << ") ";
-        dfs_inorder(temp->right);
+    void dfs_inorder() {
+        if(tree_root==nullptr) return;
+        cout<<"Inorder: // data(parent)"<<endl;
+        stack<node*> st;
+        node* current_node=tree_root;
+        while(current_node!=nullptr || !st.empty()){
+            // first we go to the leftmost node of the left subtree
+            while(current_node!=nullptr){
+                st.push(current_node);
+                current_node=current_node->left;
+            }
+            current_node=st.top();
+            st.pop();
+            // print the data
+            string _parent;
+            if(current_node->parent==nullptr) _parent="null";
+            else _parent=to_string(current_node->parent->data);
+            cout<<current_node->data<<"("<<_parent<<")"<<' ';
+            // now we go to the right subtree
+            current_node=current_node->right;
+        }
+        cout<<endl;
     }
-    void dfs_preorder(node* temp) {
-        if (temp == nullptr) return;
-        cout << temp->data << '(';
-        if (temp->parent == nullptr) cout << "null";
-        else cout << temp->parent->data;
-        cout << ") ";
-        dfs_preorder(temp->left);
-        dfs_preorder(temp->right);
+    void dfs_preorder() {
+        if(tree_root==nullptr) return;
+        cout<<"Preorder: // data(parent)"<<endl;
+        stack<node*> st;
+        st.push(tree_root);
+        while(!st.empty()){
+            node* current_node=st.top();
+            // we print the data
+            string _parent;
+            if(current_node->parent==nullptr) _parent="null";
+            else _parent=to_string(current_node->parent->data);
+            cout<<current_node->data<<"("<<_parent<<")"<<' ';
+            st.pop();
+            // the top of the stack will always be the left subtree,
+            // so we print the left node first, then the right node
+            if(current_node->right!=nullptr) st.push(current_node->right);
+            if(current_node->left!=nullptr) st.push(current_node->left);
+        }
+        cout<<endl;
     }
-    void dfs_postorder(node* temp) {
-        if (temp == nullptr) return;
-        dfs_postorder(temp->left);
-        dfs_postorder(temp->right);
-        cout << temp->data << '(';
-        if(temp->parent==nullptr) cout<<"null";
-        else cout<<temp->parent->data;
-        cout<<") ";
+    void dfs_postorder() {
+        if(tree_root==nullptr) return;
+        cout<<"Inorder: // data(parent)"<<endl;
+        stack<node*> st;
+        node* current_node=tree_root;
+        while(current_node!=nullptr || !st.empty()){
+            // first we go to the leftmost node of the left subtree
+            while(current_node!=nullptr){
+                st.push(current_node);
+                current_node=current_node->left;
+            }
+            current_node=st.top();
+            st.pop();
+            // print the data
+            string _parent;
+            if(current_node->parent==nullptr) _parent="null";
+            else _parent=to_string(current_node->parent->data);
+            cout<<current_node->data<<"("<<_parent<<")"<<' ';
+            // now we go to the right subtree
+            current_node=current_node->right;
+        }
+        cout<<endl;
     }
     void bfs() {
         int x=1;
@@ -167,17 +206,17 @@ int main() {
         switch (t) {
         case 1:
             cout << "Inorder:" << endl;
-            bst.dfs_inorder(bst.get_root());
+            bst.dfs_inorder();
             cout<<endl;
         break;
         case 2:
             cout << "Preorder:" << endl;
-            bst.dfs_preorder(bst.get_root());
+            bst.dfs_preorder();
             cout<<endl;
             break;
         case 3:
             cout << "Postorder:" << endl;
-            bst.dfs_postorder(bst.get_root());
+            bst.dfs_postorder();
             cout<<endl;
             break;
         case 4:
