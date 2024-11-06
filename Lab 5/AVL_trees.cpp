@@ -12,8 +12,9 @@ public:
     node* right;
     node* parent;
     int height;
-    node():data(0),left(nullptr),right(nullptr),parent(nullptr),height(0) {}
-    node(int value):data(value),left(nullptr),right(nullptr),parent(nullptr),height(0) {}
+    int balance_factor;
+    node():data(0),left(nullptr),right(nullptr),parent(nullptr),height(0),balance_factor(0) {}
+    node(int value):data(value),left(nullptr),right(nullptr),parent(nullptr),height(0),balance_factor(0) {}
 };
 
 class BST{
@@ -21,12 +22,17 @@ private:
     node* tree_root;
 public:
     BST():tree_root(nullptr) {}
-
+    int height(node* _node){
+        return _node ? _node->height : -1;
+    }
     void update_height(node* _node){
-        int leftHeight=-1,rightHeight=-1;
-        if(_node->left!=nullptr) leftHeight=_node->left->height;
-        if(_node->right!=nullptr) rightHeight=_node->right->height;
-        _node->height=max(leftHeight,rightHeight)+1;
+        _node->height = 1 + max(height(_node->left),height(_node->right));
+    }
+    int balanceFactor(node* _node){
+        return _node ? height(_node->left) - height(_node->right) : 0;
+    }
+    void update_balance_factor(node* _node){
+        _node->balance_factor=balanceFactor(_node);
     }
     void insert(int key){
         node* new_node=new node(key);
@@ -39,21 +45,138 @@ public:
         while(temp!=nullptr){
             target=temp;
             if(new_node->data<temp->data) temp=temp->left;
-            else temp=temp->right;
+            else if(new_node->data>temp->data) temp=temp->right;
+            else return; // no duplicates
         }
         new_node->parent=target;
         if(new_node->data<target->data) target->left=new_node;
         else target->right=new_node;
-        // to update the height of the ancestors
+
+        // to update the heights of the ancestors
         temp=new_node->parent;
         while(temp!=nullptr){
             update_height(temp);
             temp=temp->parent;
         }
+        //  to update the balance factor of the ancestors
+        temp=new_node->parent;
+        while(temp!=nullptr){
+            update_balance_factor(temp);
+            temp=temp->parent;
+        }
+        // balance this tree
+        // balance_tree(new_node);
+    }
+    void left_rotate(node* z){
+        node* y=z->right;
+        node* y_left=y->left;
+        // if z is the root, then update the tree_root
+        if(z==tree_root) tree_root=y;
+        // set parent of y
+        y->parent=z->parent;
+        // set left child of y, no change in right child of y
+        y->left=z;
+        // set the child of z' parent to be y
+        if(z->parent!=nullptr){
+            if(z==z->parent->left) z->parent->left=y;
+            else z->parent->right=y;
+        }
+        // set the right child z to be y_left
+        z->right=y_left;
+        // set the parent of z to be y
+        z->parent=y;
+        // set the parent of y_left to be z
+        if(y_left!=nullptr)y_left->parent=z;
+        // to update the heights of the ancestors
+        node* temp=z;
+        while(temp!=nullptr){
+            update_height(temp);
+            temp=temp->parent;
+        }
+    }
+    void right_rotate(node* z){
+        node* y=z->left;
+        node* y_right=y->right;
+        // if z is the root, then update the tree_root
+        if(z==tree_root) tree_root=y;
+        // set parent of y
+        y->parent=z->parent;
+        // set right child of y, no change in right child of y
+        y->right=z;
+        // set the child of z' parent to be y
+        if(z->parent!=nullptr){
+            if(z==z->parent->left) z->parent->left=y;
+            else z->parent->right=y;
+        }
+        // set the left child z to be y_right
+        z->left=y_right;
+        // set the parent of z to be y
+        z->parent=y;
+        // set the parent of y_right to be z
+        if(y_right!=nullptr) y_right->parent=z;
+        // to update the heights of the ancestors
+        node* temp=z;
+        while(temp!=nullptr){
+            update_height(temp);
+            temp=temp->parent;
+        }
+    }
+    void balance_tree(node* new_node){
+        bool l=0,r=0;
+        if(new_node==new_node->parent->left) l=1;
+        else r=1;
+        // check if there's an unbalanced node
+        node* temp=new_node->parent;
+        while(temp!=nullptr && abs(temp->balance_factor)<=1) temp=temp->parent;
+        if(temp==nullptr) return;
+        // case: LL
+        if(temp->balance_factor>1 && l) right_rotate(temp);
+        // case: RR
+        else if(temp->balance_factor<-1 && r) left_rotate(temp);
+        // case: LR
+        else if(temp->balance_factor>1 && r){
+            left_rotate(temp->left);
+            right_rotate(temp);
+        }
+        // case: RL
+        else{
+            right_rotate(temp->right);
+            left_rotate(temp);
+        }
+        // node* temp = new_node->parent;
+        // while (temp != nullptr) {
+        //     update_height(temp);
+        //     update_balance_factor(temp);
+        //     // Check if this node is unbalanced
+        //     if (abs(temp->balance_factor) > 1) {
+        //         // Determine the type of rotation needed
+        //         if (temp->balance_factor > 1) {
+        //             if (temp->left->balance_factor >= 0) {
+        //                 // LL case
+        //                 right_rotate(temp);
+        //             } else {
+        //                 // LR case
+        //                 left_rotate(temp->left);
+        //                 right_rotate(temp);
+        //             }
+        //         } else {
+        //             if (temp->right->balance_factor <= 0) {
+        //                 // RR case
+        //                 left_rotate(temp);
+        //             } else {
+        //                 // RL case
+        //                 right_rotate(temp->right);
+        //                 left_rotate(temp);
+        //             }
+        //         }
+        //     }
+        //     // Move to the parent and continue checking
+        //     temp = temp->parent;
+        // }
     }
     node* search(int key){
         node* target=tree_root;
-        while(target->data!=key){
+        while(target!=nullptr && target->data!=key){
             if(key<target->data) target=target->left;
             else target=target->right;
         }
@@ -95,12 +218,6 @@ public:
         }
     }
     // tree traversal
-    /*
-    recursive
-        print data
-        preorder(node->left)
-        preorder(node->right)
-    */
     void dfs_preorder(){
         if(tree_root==nullptr) return;
         cout<<"Preorder: // data(parent)"<<endl;
@@ -204,27 +321,19 @@ public:
 
 int main(){
     BST bst;
-    int t; 
-    cin>>t;
-    while(t--){
-        int key;
-        cin>>key;
-        bst.insert(key);
-    }
-    // bst.dfs_preorder();
+    bst.insert(130);
+    bst.insert(100);
+    bst.insert(50);
     bst.dfs_inorder();
-    // bst.dfs_postorder();
     bst.bfs();
+    // int t;
+    // while(cin>>t && t!=-1){
+    //     bst.insert(t);
+    //     bst.dfs_inorder();
+    //     bst.bfs();
+    //     cout<<endl;
+    // }
+    
 
-
-    int k;
-    cin>>k;
-    while(k--){
-        int key;
-        cin>>key;
-        bst.delete_node(key);
-        bst.dfs_inorder();
-        bst.bfs();
-    }
     return 0;
 }

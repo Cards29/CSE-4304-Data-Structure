@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <string>
 #include <queue>
+#include <stack>
 
 using namespace std;
 
@@ -83,14 +84,27 @@ public:
         if(temp->data==key){
             
         }
-        dfs_inorder(temp->left);
-        dfs_inorder(temp->right);
     }
-    void dfs_inorder(node* temp) {
-        if (temp == nullptr) return;
-        dfs_inorder(temp->left);
-        cout << temp->data << ' ';
-        dfs_inorder(temp->right);
+    void dfs_inorder() {
+        if(tree_root==nullptr) return;
+        cout<<"Inorder: // data(parent)"<<endl;
+        stack<node*> st;
+        node* current_node=tree_root;
+        while(current_node!=nullptr || !st.empty()){
+            // first we go to the leftmost node of the left subtree
+            while(current_node!=nullptr){
+                st.push(current_node);
+                current_node=current_node->left;
+            }
+            current_node=st.top();
+            st.pop();
+            // print the data
+            string _parent;
+            cout<<current_node->data<<' ';
+            // now we go to the right subtree
+            current_node=current_node->right;
+        }
+        cout<<endl;
     }
     void bfs(){
         if (tree_root != nullptr) {
@@ -132,7 +146,7 @@ int main() {
     }
     cout<<endl;
     bst.bfs(); cout<<endl;
-    bst.dfs_inorder(bst.get_root());
+    bst.dfs_inorder();
     cout<<endl;
     while(cin>>t && t!=-1){
         switch (t){
